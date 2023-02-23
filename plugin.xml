@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="com.outsystems.moneystories.plugin" version="1.0.0">
+    <name>MoneyStoriesPlugin</name>
+    <description>MoneyStoriesPlugin to display stories by date information using MoneyStory SDK</description>
+    <license>MIT</license>
+
+    <engines>
+        <engine name="cordova" version=">=10.0.0"/>
+        <engine name="cordova-android" version=">=9.0.0"/>
+        <engine name="cordova-ios" version=">=5.1.1"/>
+    </engines> 
+
+    <keywords>cordova,android,ios</keywords>
+ 
+    <js-module src="www/MoneyStoriesPlugin.js" name="MoneyStoriesPlugin">
+        <clobbers target="cordova.plugins.MoneyStoriesPlugin" />
+    </js-module>
+
+    <!-- android side -->
+    <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="MoneyStoriesPlugin">
+                <param name="android-package" value="com.outsystems.moneystories.plugin.MoneyStoriesPlugin"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        </config-file>
+ 
+        <source-file src="src/android/MoneyStoriesPlugin.java" target-dir="src/com/outsystems/moneystories/plugin" />
+         <framework src="src/android/moneystories.gradle" custom="true" type="gradleReference" />
+    </platform>          
+</plugin>

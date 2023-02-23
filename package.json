@@ -1,0 +1,22 @@
+{
+  "name": "com.outsystems.moneystories.plugin",
+  "version": "1.0.0",
+  "description": "MoneyStoriesPlugin to display stories by date information using MoneyStory SDK",
+  "cordova": {
+    "id": "com.outsystems.moneystories.plugin",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+  },
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Paulo Cesar Camilo",
+  "license": "MIT"
+}

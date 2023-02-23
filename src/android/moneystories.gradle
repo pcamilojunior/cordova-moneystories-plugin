@@ -1,0 +1,36 @@
+repositories {
+    jcenter()
+    google()
+    // This maven configuration will be replaced to .aar files provided by Finshape
+    maven {
+       url 'https://maven.w.up/content/groups/money-stories-group/'
+       credentials {
+           username = 'outsys-camilo'
+           password = '24KEegNS6e'
+       }
+    }
+    maven { url "https://plugins.gradle.org/m2" }
+    maven { url 'https://jitpack.io' }
+}
+
+android {
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        // Added data binding to use in MoneyStories SDK
+        dataBinding true 
+    }
+}
+
+dependencies {
+    // Finshape Dependencies to use MoneyStories SDK
+    implementation "hu.wup.moneystories.apigateway:api-gateway-api-android:1.9.2-SNAPSHOT"
+    implementation 'hu.wup.moneystories.android.lib:moneystories:1.1.0-9-65'
+}
+
+// Changing compileSdkVersion to use in MoneyStories
+ext.cdvSdkVersion = 31
