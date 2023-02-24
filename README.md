@@ -36,7 +36,7 @@ __Parameters__:
 
 - __accessToken__: Access Token should be provided by Finshape.
 
-- __languageCode__: Provide the language that you want to see your stories.
+- __languageCode__: Provide the language that you want to see in your stories.
 
 
 - __successCallback__: A callback that is passed when the service is started with success. _(Function)_
@@ -101,7 +101,7 @@ cordova.plugins.MoneyStoriesPlugin.openStories(
 ```javascript
 Observations:
 
-    For the openStories action the period field, the available values are:
+    For the openStories action in the period field, the available values are:
     - DAILY
     - WEEKLY
     - MONTHLY
