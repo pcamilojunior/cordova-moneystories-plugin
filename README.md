@@ -56,7 +56,7 @@ var fail = function (error) {
 
 cordova.plugins.MoneyStoriesPlugin.initializeSdk(
     {
-        baseUrl: "PASTE YOUR PASE URL HERE",
+        baseUrl: "PASTE YOUR BASE URL HERE",
         languageCode: "en",
         accessToken: "PASTE YOUR ACCESS TOKEN HERE"
     },
