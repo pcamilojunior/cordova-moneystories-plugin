@@ -112,7 +112,7 @@ Observations:
 ### Story View screenshot
 
 <p align="left">
-  <img src="screnshot.PNG" width="350" title="Screenshot Stories">
+  <img src="https://github.com/pcamilojunior/cordova-moneystories-plugin/blob/master/screenshot.PNG" width="350" title="Screenshot Stories">
 </p>
 
 
