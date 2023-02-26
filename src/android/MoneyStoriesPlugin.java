@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import com.outsystems.moneystories.BridgeActivity;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -18,7 +19,7 @@ import hu.wup.moneystories.MoneyStories;
 import hu.wup.moneystories.data.model.PeriodTypeModel;
 import hu.wup.moneystories.data.model.StoryLineBaseModel;
 import hu.wup.moneystories.data.model.StoryLineModel;
-import hu.wup.moneystories.ui.main.MoneyStoriesActivity;
+import hu.wup.moneystories.ui.storyBar.StoryBarView;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MoneyStoriesPlugin extends CordovaPlugin {
@@ -65,12 +66,12 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                 MoneyStories moneyStories = new MoneyStories.Builder()
                         .context(this.cordova.getContext())
                         .withBaseUrl(baseUrl)
+                        .inDebugMode()
                         .withLanguageCode(languageCode)
                         .build();
 
                 moneyStories.setAccessToken("Bearer " + accessToken);
                 MoneyStories.Companion.initialize(moneyStories);
-
                 this.callbackContext.success();
             } else {
                 this.callbackContext.error("Error to initialize the SDK arguments not found");
@@ -97,6 +98,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             accessToken = (String) object.get("accessToken");
         } else {
             callbackContext.error("Field accessToken not present or invalid!");
+
         }
     }
 
@@ -121,16 +123,20 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
 
     private void prepareParamsToOpenStories(String periodType, String date) {
         try {
+
             PeriodTypeModel periodTypeModel = PeriodTypeModel.valueOf(periodType);
-            triggerStoryAct(new StoryLineModel(LocalDate.parse(date), periodTypeModel, true));
-        } catch (Exception ex) {
-            this.callbackContext.error(ex.getMessage());
+            LocalDate dateParsed = LocalDate.parse(date);
+
+            triggerStoryAct(new StoryLineModel(dateParsed, periodTypeModel, true));
+
+        } catch (Exception exception) {
+            this.callbackContext.error("Fields period or date are not valid!");
         }
     }
 
     private void triggerStoryAct(StoryLineBaseModel data) {
-        Intent intent = new Intent(this.cordova.getContext(), MoneyStoriesActivity.class);
-        intent.putExtra("INTENT_SELECTED_ITEM", data);
-        this.cordova.getActivity().startActivity(intent);
+        Intent intent = new Intent(this.cordova.getContext(), BridgeActivity.class);
+        intent.putExtra(StoryBarView.INTENT_SELECTED_ITEM, data);
+        this.cordova.getContext().startActivity(intent);
     }
 }

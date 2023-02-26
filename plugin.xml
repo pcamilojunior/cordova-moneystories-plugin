@@ -28,8 +28,16 @@
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
         </config-file>
- 
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:label="@string/app_name" android:name="com.outsystems.moneystories.BridgeActivity" android:theme="@style/Theme.AppCompat.Light">
+            </activity>
+        </config-file>
+
         <source-file src="src/android/MoneyStoriesPlugin.java" target-dir="src/com/outsystems/moneystories/plugin" />
-         <framework src="src/android/moneystories.gradle" custom="true" type="gradleReference" />
+        <source-file src="src/android/BridgeActivity.java" target-dir="src/com/outsystems/moneystories" />
+        <source-file src="src/android/layout/bridgelayout.xml" target-dir="res/layout" />
+        <framework src="src/android/moneystories.gradle" custom="true" type="gradleReference" />
+
     </platform>          
 </plugin>
