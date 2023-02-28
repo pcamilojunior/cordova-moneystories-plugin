@@ -11,21 +11,21 @@ buildscript {
 repositories {
     jcenter()
     google()
-    flatDir {
-        dirs 'src/main/libs'
-    }
 }
 
 android {
-    
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
     buildFeatures {
-        // Added data binding to use in MoneyStories SDK
-        dataBinding true 
+        dataBinding true
     }
 }
 
@@ -50,6 +50,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     implementation files("libs/moneystories-1.1.0-50.aar")
     implementation files("libs/moneystories-api-gateway-android.aar")
