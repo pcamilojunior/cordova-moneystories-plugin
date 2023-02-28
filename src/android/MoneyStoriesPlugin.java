@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
-import com.outsystems.moneystories.BridgeActivity;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -19,6 +18,7 @@ import hu.wup.moneystories.MoneyStories;
 import hu.wup.moneystories.data.model.PeriodTypeModel;
 import hu.wup.moneystories.data.model.StoryLineBaseModel;
 import hu.wup.moneystories.data.model.StoryLineModel;
+import hu.wup.moneystories.ui.main.MoneyStoriesActivity;
 import hu.wup.moneystories.ui.storyBar.StoryBarView;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -135,7 +135,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     }
 
     private void triggerStoryAct(StoryLineBaseModel data) {
-        Intent intent = new Intent(this.cordova.getContext(), BridgeActivity.class);
+        Intent intent = new Intent(this.cordova.getContext(), MoneyStoriesActivity.class);
         intent.putExtra(StoryBarView.INTENT_SELECTED_ITEM, data);
         this.cordova.getContext().startActivity(intent);
     }

@@ -16,6 +16,19 @@
         <clobbers target="cordova.plugins.MoneyStoriesPlugin" />
     </js-module>
 
+    <!-- ios sidee -->
+    <platform name="ios">
+        <!-- Hooks for Swift Support -->
+        <hook type="after_plugin_install" src="src/ios/hooks/install_prerequisites.js"/>
+        <hook type="after_plugin_add" src="src/ios/hooks/add_swift_support.js" />
+        <config-file parent="/*" target="config.xml">
+            <feature name="MoneyStoriesPlugin">
+                <param name="ios-package" value="MoneyStoriesPlugin" />
+            </feature>
+        </config-file>
+         <source-file src="src/ios/MoneyStoriesPlugin.swift" />
+    </platform>
+
     <!-- android side -->
     <platform name="android">
 
@@ -35,9 +48,9 @@
         </config-file>
 
         <source-file src="src/android/MoneyStoriesPlugin.java" target-dir="src/com/outsystems/moneystories/plugin" />
-        <source-file src="src/android/BridgeActivity.java" target-dir="src/com/outsystems/moneystories" />
-        <source-file src="src/android/layout/bridgelayout.xml" target-dir="res/layout" />
         <framework src="src/android/moneystories.gradle" custom="true" type="gradleReference" />
+        <lib-file src="src/android/libs/moneystories-1.1.0-50.aar" target="libs/moneystories-1.1.0-50.aar" />
+        <lib-file src="src/android/libs/moneystories-api-gateway-android.aar" target="libs/moneystories-api-gateway-android.aar" />
 
     </platform>          
 </plugin>

@@ -1,16 +1,19 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2"
+    }
+}
+
 repositories {
     jcenter()
     google()
-    // This maven configuration will be replaced to .aar files provided by Finshape
-    maven {
-       url 'https://maven.w.up/content/groups/money-stories-group/'
-       credentials {
-           username = 'outsys-camilo'
-           password = '24KEegNS6e'
-       }
+    flatDir {
+        dirs 'src/main/libs'
     }
-    maven { url "https://plugins.gradle.org/m2" }
-    maven { url 'https://jitpack.io' }
 }
 
 android {
@@ -27,9 +30,29 @@ android {
 }
 
 dependencies {
-    // Finshape Dependencies to use MoneyStories SDK
-    implementation "hu.wup.moneystories.apigateway:api-gateway-api-android:1.9.2-SNAPSHOT"
-    implementation 'hu.wup.moneystories.android.lib:moneystories:1.1.0-9-65'
+    implementation fileTree(include: ['*.aar'], dir: 'libs')
+
+    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "com.google.android.material:material:1.6.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.2"
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.2"
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation "com.airbnb.android:lottie:5.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.20"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.21"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+
+    implementation "com.google.code.gson:gson:2.10.1"
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation "io.gsonfire:gson-fire:1.7.1"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+
+    implementation(name:'moneystories-1.1.0-50', ext:'aar')
+    implementation(name:'moneystories-api-gateway-android', ext:'aar')
 }
 
 // Changing compileSdkVersion to use in MoneyStories
