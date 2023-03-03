@@ -32,6 +32,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     private String baseUrl;
     private String accessToken;
     private String languageCode;
+    private String customerId;
     private MoneyStories moneyStories;
 
     @Override
@@ -76,6 +77,8 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                         .build();
 
                 moneyStories.setAccessToken("Bearer " + accessToken);
+                moneyStories.setCustomerId(customerId);     
+
                 MoneyStories.Companion.initialize(moneyStories);
                 this.callbackContext.success();
             } else {
@@ -117,7 +120,11 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             accessToken = (String) object.get("accessToken");
         } else {
             callbackContext.error("Field accessToken not present or invalid!");
-
+        }
+        if (object.has("customerId")) {
+            customerId = (String) object.get("customerId");
+        } else {
+            callbackContext.error("Field customerId not present or invalid!");
         }
     }
 
