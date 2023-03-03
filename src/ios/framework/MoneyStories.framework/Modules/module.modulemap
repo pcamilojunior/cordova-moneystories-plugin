@@ -1,0 +1,11 @@
+framework module MoneyStories {
+  umbrella header "MoneyStories.h"
+
+  export *
+  module * { export * }
+}
+
+module MoneyStories.Swift {
+    header "MoneyStories-Swift.h"
+    requires objc
+}

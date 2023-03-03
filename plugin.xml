@@ -26,7 +26,8 @@
                 <param name="ios-package" value="MoneyStoriesPlugin" />
             </feature>
         </config-file>
-         <source-file src="src/ios/MoneyStoriesPlugin.swift" />
+        <source-file src="src/ios/MoneyStoriesPlugin.swift" />
+        <framework src="src/ios/framework/MoneyStories.framework" embed="true" custom="true" />
     </platform>
 
     <!-- android side -->

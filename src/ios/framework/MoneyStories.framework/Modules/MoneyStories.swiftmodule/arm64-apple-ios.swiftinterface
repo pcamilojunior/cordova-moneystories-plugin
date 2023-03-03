@@ -1,0 +1,85 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name MoneyStories
+import Foundation
+@_exported import MoneyStories
+import OSLog
+import Swift
+import UIKit
+import WebKit
+import _Concurrency
+@_hasMissingDesignatedInitializers @objc public class SharedAnalyticsData : ObjectiveC.NSObject {
+  @objc final public let eventName: Swift.String
+  @objc final public let functionName: Swift.String
+  @objc final public let eventDate: Swift.String
+  @objc final public let eventDateTimeZone: Swift.String
+  @objc final public let data: [Swift.String : Swift.String]
+  @objc deinit
+}
+public protocol MoneyStoriesUsing {
+  func moneyStories() -> MoneyStories.MoneyStoriesInterface
+}
+extension MoneyStories.MoneyStoriesUsing {
+  public func moneyStories() -> MoneyStories.MoneyStoriesInterface
+}
+@objc @_inheritsConvenienceInitializers public class MoneyStoriesObjcInjector : ObjectiveC.NSObject, MoneyStories.MoneyStoriesUsing {
+  @objc public func injectedMoneyStories() -> MoneyStories.MoneyStoriesInterface
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public protocol MoneyStoriesInterface {
+  @objc func setup(withConfigBuilder builder: MoneyStories.ConfigBuilder)
+  @objc func authenticate(withCredential: MoneyStories.Credential)
+  @objc func setAuthenticationTokenErrorHandler(_ handler: MoneyStories.AuthenticationTokenErrorHandler)
+  @objc func setAnalyticsEventHandler(_ handler: MoneyStories.AnalyticsEventHandler)
+  @objc func handleNotification(date: Swift.String, period: Swift.String)
+}
+@_inheritsConvenienceInitializers @objc final public class ConfigBuilder : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc final public func withDebugEnabled() -> MoneyStories.ConfigBuilder
+  @objc final public func withBaseUrl(_ url: Foundation.URL) -> MoneyStories.ConfigBuilder
+  @objc final public func withLanguageCode(_ code: Swift.String) -> MoneyStories.ConfigBuilder
+  @objc final public func withPinnedCertificates(host: Swift.String, certificates: [Foundation.Data], validateCertificateChain: Swift.Bool = true, validateHost: Swift.Bool = true) -> MoneyStories.ConfigBuilder
+  @nonobjc final public func withPinnedCertificates(host: Swift.String, certificates: [Security.SecCertificate], validateCertificateChain: Swift.Bool = true, validateHost: Swift.Bool = true) -> MoneyStories.ConfigBuilder
+  @nonobjc final public func withPinnedPublicKeys(host: Swift.String, publicKeys: [Security.SecKey], validateCertificateChain: Swift.Bool = true, validateHost: Swift.Bool = true) -> MoneyStories.ConfigBuilder
+  @objc deinit
+}
+@objc public protocol AuthenticationTokenErrorHandler {
+  @objc func handleInvalidToken(completion: @escaping () -> Swift.Void)
+}
+@objc public enum MStoriesAuthError : Swift.Int, Swift.Error {
+  case emptyInput = 0
+  case invalidToken = 1
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public static var _nsErrorDomain: Swift.String {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public protocol AnalyticsEventHandler {
+  @objc func handleEvent(_ event: MoneyStories.SharedAnalyticsData)
+}
+@objc public class BearerToken : ObjectiveC.NSObject, Swift.Codable, MoneyStories.Credential {
+  final public let token: Swift.String
+  @objc required public init(withToken token: Swift.String) throws
+  @objc public func toString() -> Swift.String
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @_Concurrency.MainActor(unsafe) final public class StoryBarView : UIKit.UIView, MoneyStories.MoneyStoriesUsing {
+  @objc @_Concurrency.MainActor(unsafe) final public func startLoading()
+  @_Concurrency.MainActor(unsafe) @objc override final public var intrinsicContentSize: CoreGraphics.CGSize {
+    @_Concurrency.MainActor(unsafe) @objc get
+  }
+  @objc deinit
+}
+@objc public protocol Credential {
+  @objc func toString() -> Swift.String
+}
+extension MoneyStories.MStoriesAuthError : Swift.Equatable {}
+extension MoneyStories.MStoriesAuthError : Swift.Hashable {}
+extension MoneyStories.MStoriesAuthError : Swift.RawRepresentable {}

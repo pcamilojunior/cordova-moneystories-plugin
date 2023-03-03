@@ -26,11 +26,13 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
 
     private CallbackContext callbackContext;
     private final String ACTION_INIT_SDK = "initializeSdk";
+    private final String ACTION_REFRESH_TOKEN = "refreshToken";
     private final String ACTION_OPEN_STORIES = "openStories";
 
     private String baseUrl;
     private String accessToken;
     private String languageCode;
+    private MoneyStories moneyStories;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
@@ -44,6 +46,9 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                     }
                     if (ACTION_OPEN_STORIES.equals(action)) {
                         openStoriesScreen(args);
+                    }
+                    if (ACTION_REFRESH_TOKEN.equals(action)) {
+                        setRefreshToken(args);
                     }
                 });
             } catch (Exception ex) {
@@ -63,7 +68,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             if (args != null) {
                 setupArgumentsToInitSDK(args);
 
-                MoneyStories moneyStories = new MoneyStories.Builder()
+                moneyStories = new MoneyStories.Builder()
                         .context(this.cordova.getContext())
                         .withBaseUrl(baseUrl)
                         .inDebugMode()
@@ -78,6 +83,20 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             }
         } catch (Exception ex) {
             this.callbackContext.error("Error to initialize the SDK: "+ex.getMessage());
+        }
+    }
+
+    private void setRefreshToken(JSONArray args) {
+        try {
+            String token = (String) args.get(0);
+
+            if (moneyStories != null) {
+                MoneyStories.Companion.getInstance().setAccessToken(token);
+                moneyStories.setAccessToken(token);
+            }
+
+        } catch(Exception ex) {
+            this.callbackContext.error("Error to refresh token: "+ex.getMessage());
         }
     }
 
