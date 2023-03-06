@@ -1,10 +1,10 @@
 package com.outsystems.moneystories.plugin;
 
-
 import android.content.Intent;
-import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
-import androidx.annotation.RequiresApi;
+import androidx.lifecycle.Observer;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -13,18 +13,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import hu.wup.moneystories.MoneyStories;
 import hu.wup.moneystories.data.model.PeriodTypeModel;
 import hu.wup.moneystories.data.model.StoryLineBaseModel;
 import hu.wup.moneystories.data.model.StoryLineModel;
+import hu.wup.moneystories.di.AppContainer;
+import hu.wup.moneystories.ui.base.RowViewModel;
 import hu.wup.moneystories.ui.main.MoneyStoriesActivity;
 import hu.wup.moneystories.ui.storyBar.StoryBarView;
+import hu.wup.moneystories.ui.storyBar.StoryBarViewModel;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
+
 public class MoneyStoriesPlugin extends CordovaPlugin {
 
-    private CallbackContext callbackContext;
+    private       CallbackContext callbackContext;
     private final String ACTION_INIT_SDK = "initializeSdk";
     private final String ACTION_REFRESH_TOKEN = "refreshToken";
     private final String ACTION_OPEN_STORIES = "openStories";
@@ -34,6 +39,8 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     private String languageCode;
     private String customerId;
     private MoneyStories moneyStories;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
@@ -77,30 +84,47 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                         .build();
 
                 moneyStories.setAccessToken("Bearer " + accessToken);
-                moneyStories.setCustomerId(customerId);     
+                moneyStories.setCustomerId(customerId);
 
                 MoneyStories.Companion.initialize(moneyStories);
-                this.callbackContext.success();
+
+                this.returnInitStories();
             } else {
                 this.callbackContext.error("Error to initialize the SDK arguments not found");
             }
         } catch (Exception ex) {
-            this.callbackContext.error("Error to initialize the SDK: "+ex.getMessage());
+            this.callbackContext.error("Error to initialize the SDK: " + ex.getMessage());
         }
     }
 
-    private void setRefreshToken(JSONArray args) {
-        try {
-            String token = (String) args.get(0);
+    private void returnInitStories() {
+        StoryBarViewModel viewModel = initViewModel();
+        Observer<List<RowViewModel<StoryLineBaseModel>>> result = items -> {
 
-            if (moneyStories != null) {
-                MoneyStories.Companion.getInstance().setAccessToken(token);
-                moneyStories.setAccessToken(token);
+            if (items.isEmpty()) {
+                callbackContext.error("No stories to display");
+            } else {
+                try {
+                    List<StoryLineBaseModel> stories = new ArrayList<>();
+                    JSONArray storiesResult = new JSONArray(stories);
+
+                    for (RowViewModel<StoryLineBaseModel> item : items) {
+                        if (item.getItem() instanceof StoryLineModel) {
+                            storiesResult.put(item.getItem());
+                        }
+                    }
+
+                    callbackContext.success(storiesResult);
+                } catch (Exception ex) {
+                    callbackContext.error("Error to retrieve the stories");
+                }
             }
+        };
 
-        } catch(Exception ex) {
-            this.callbackContext.error("Error to refresh token: "+ex.getMessage());
-        }
+        handler.post(() -> {
+            viewModel.initStoryBar();
+            viewModel.getStoryBarItems().observe(cordova.getActivity(), result);
+        });
     }
 
     private void setupArgumentsToInitSDK(JSONArray args) throws JSONException {
@@ -125,6 +149,20 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             customerId = (String) object.get("customerId");
         } else {
             callbackContext.error("Field customerId not present or invalid!");
+        }
+    }
+
+    private void setRefreshToken(JSONArray args) {
+        try {
+            String token = (String) args.get(0);
+
+            if (moneyStories != null) {
+                MoneyStories.Companion.getInstance().setAccessToken("Bearer "+token);
+                moneyStories.setAccessToken("Bearer "+token);
+            }
+
+        } catch(Exception ex) {
+            this.callbackContext.error("Error to refresh token: "+ex.getMessage());
         }
     }
 
@@ -154,7 +192,6 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             LocalDate dateParsed = LocalDate.parse(date);
 
             triggerStoryAct(new StoryLineModel(dateParsed, periodTypeModel, true));
-
         } catch (Exception exception) {
             this.callbackContext.error("Fields period or date are not valid!");
         }
@@ -164,5 +201,15 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
         Intent intent = new Intent(this.cordova.getContext(), MoneyStoriesActivity.class);
         intent.putExtra(StoryBarView.INTENT_SELECTED_ITEM, data);
         this.cordova.getContext().startActivity(intent);
+    }
+
+    private StoryBarViewModel initViewModel() {
+        return new StoryBarViewModel(AppContainer.Companion.getInstance().getUtilModule().getGson(),
+                                     AppContainer.Companion.getInstance().getResourceModule().getUpdateResourcesUseCase(),
+                                     AppContainer.Companion.getInstance().getResourceModule().getGetResourcesUseCase(),
+                                     AppContainer.Companion.getInstance().getPreloadModule().getGetPreloadUseCase(),
+                                     AppContainer.Companion.getInstance().getConfigModule().getGetConfigurationUseCase(),
+                                     AppContainer.Companion.getInstance().getDeviceInfoModule().getGetDeviceInfoAnalyticsDataUseCase(),
+                                     AppContainer.Companion.getInstance().getAnalyticsModule().getStoreAnalyticsDataUseCase());
     }
 }

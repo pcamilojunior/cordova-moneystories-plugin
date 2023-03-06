@@ -38,6 +38,7 @@ __Parameters__:
 
 - __languageCode__: Provide the language that you want to see in your stories.
 
+- __customerId__: Provide your customerId.
 
 - __successCallback__: A callback that is passed when the service is started with success. _(Function)_
 
@@ -58,7 +59,8 @@ cordova.plugins.MoneyStoriesPlugin.initializeSdk(
     {
         baseUrl: "PASTE YOUR BASE URL HERE",
         languageCode: "en",
-        accessToken: "PASTE YOUR ACCESS TOKEN HERE"
+        accessToken: "PASTE YOUR ACCESS TOKEN HERE",
+        customerId: "XXXXX"
     },
     success, 
     fail
