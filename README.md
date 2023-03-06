@@ -24,7 +24,7 @@ made fast, easy and personalised.
 
 ## Methods
 
-- __initializeSdk__: Method to initialise the SDK.
+- __initializeSdk__: Method to initialise the SDK. This function returns a Array of Stories
 
 - __openStories__: Method to open your customazed stories with custom parameters.
 
