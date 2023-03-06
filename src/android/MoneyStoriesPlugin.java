@@ -114,7 +114,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                         }
                     }
 
-                    callbackContext.success(storiesResult);
+                    callbackContext.success(new Gson().toJson(storiesResult));
                 } catch (Exception ex) {
                     callbackContext.error("Error to retrieve the stories");
                 }
