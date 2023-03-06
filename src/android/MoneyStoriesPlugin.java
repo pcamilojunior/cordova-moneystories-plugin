@@ -159,6 +159,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             if (moneyStories != null) {
                 MoneyStories.Companion.getInstance().setAccessToken("Bearer "+token);
                 moneyStories.setAccessToken("Bearer "+token);
+                callbackContext.success();
             }
 
         } catch(Exception ex) {
