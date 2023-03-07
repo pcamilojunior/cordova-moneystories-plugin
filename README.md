@@ -28,6 +28,9 @@ made fast, easy and personalised.
 
 - __openStories__: Method to open your customazed stories with custom parameters.
 
+- __refreshToken__: Method to refresh the token to be able to see the stories.
+
+
 ## initializeSdk()
 
 __Parameters__:
@@ -60,13 +63,12 @@ cordova.plugins.MoneyStoriesPlugin.initializeSdk(
         baseUrl: "PASTE YOUR BASE URL HERE",
         languageCode: "en",
         accessToken: "PASTE YOUR ACCESS TOKEN HERE",
-        customerId: "XXXXX"
+        customerId: "PASTE YOUR CUSTOMER ID HERE"
     },
     success, 
     fail
 );
 ``` 
-
 
 ## openStories()
 
