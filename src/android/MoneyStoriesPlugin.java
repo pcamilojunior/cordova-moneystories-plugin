@@ -107,16 +107,22 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                 callbackContext.error("No stories to display");
             } else {
                 try {
-                    List<StoryLineBaseModel> stories = new ArrayList<>();
-                    JSONArray storiesResult = new JSONArray(stories);
+                    List<StoryModel> stories = new ArrayList<>();
 
                     for (RowViewModel<StoryLineBaseModel> item : items) {
                         if (item.getItem() instanceof StoryLineModel) {
-                            storiesResult.put(item.getItem());
+
+                            StoryModel model = new StoryModel();
+                            model.period = ((StoryLineModel) item.getItem()).getPeriod().name();
+                            model.read = ((StoryLineModel) item.getItem()).getRead();
+                            model.startDate = ((StoryLineModel) item.getItem()).getStartDate().toString();
+
+                            stories.add(model);
                         }
                     }
+                    String resultJson = new Gson().toJson(stories);
 
-                    callbackContext.success(new Gson().toJson(storiesResult));
+                    callbackContext.success(resultJson);
                 } catch (Exception ex) {
                     callbackContext.error("Error to retrieve the stories");
                 }
@@ -127,6 +133,12 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             viewModel.initStoryBar();
             viewModel.getStoryBarItems().observe(cordova.getActivity(), result);
         });
+    }
+
+    private static class StoryModel {
+        public String startDate;
+        public boolean read;
+        public String period;
     }
 
     private void setupArgumentsToInitSDK(JSONArray args) throws JSONException {
