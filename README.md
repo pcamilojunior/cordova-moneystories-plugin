@@ -102,6 +102,36 @@ cordova.plugins.MoneyStoriesPlugin.openStories(
 );
 ```
 
+
+## refreshToken()
+
+__Parameters__:
+
+- __accessToken__: The access token to refresh
+
+- __successCallback__: A callback that is passed when the service is started with success. _(Function)_
+
+- __errorCallback__: A callback that executes if an error occurs retrieving the `MoneyStories Plugin` refreshToken. _(Function)_
+
+
+### Example - refreshToken()
+
+```javascript
+var success = function (data) {
+    console.log(data);
+}
+
+var fail = function (error) {
+    console.log(error);
+}
+
+cordova.plugins.MoneyStoriesPlugin.refreshToken(
+    "token here....",
+    success, 
+    fail
+);
+```
+
 ```javascript
 Observations:
 
