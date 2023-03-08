@@ -5,7 +5,7 @@ exports.initializeSdk = function(params, successCallback, errorCallback) {
 };
 
 exports.refreshToken = function(token, successCallback, errorCallback) {
-    exec(successCallback, errorCallback,  'MoneyStoriesPlugin', 'refreshToken', token);
+    exec(successCallback, errorCallback,  'MoneyStoriesPlugin', 'refreshToken', [token]);
 };
 
 exports.openStories = function(params, successCallback, errorCallback) {

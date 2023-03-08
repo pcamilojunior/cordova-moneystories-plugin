@@ -168,14 +168,15 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
 
     private void setRefreshToken(JSONArray args) {
         try {
-            String token = (String) args.get(0);
+            if (args != null && args.length() > 0) {
+                String token = (String) args.get(0);
 
-            if (moneyStories != null) {
-                MoneyStories.Companion.getInstance().setAccessToken("Bearer "+token);
-                moneyStories.setAccessToken("Bearer "+token);
-                callbackContext.success();
+                if (moneyStories != null) {
+                    MoneyStories.Companion.getInstance().setAccessToken("Bearer " + token);
+                    moneyStories.setAccessToken("Bearer " + token);
+                    callbackContext.success();
+                }
             }
-
         } catch(Exception ex) {
             this.callbackContext.error("Error to refresh token: "+ex.getMessage());
         }
