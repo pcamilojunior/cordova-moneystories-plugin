@@ -217,6 +217,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
         Intent intent = new Intent(this.cordova.getContext(), MoneyStoriesActivity.class);
         intent.putExtra(StoryBarView.INTENT_SELECTED_ITEM, data);
         this.cordova.getContext().startActivity(intent);
+        callbackContext.success();
     }
 
     private StoryBarViewModel initViewModel() {
