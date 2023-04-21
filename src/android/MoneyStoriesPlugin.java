@@ -36,6 +36,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     private final String ACTION_REFRESH_TOKEN = "refreshToken";
     private final String ACTION_OPEN_STORIES = "openStories";
 
+    private final String MORE_ACTION = "MORE";
     private String baseUrl;
     private String accessToken;
     private String languageCode;
@@ -186,13 +187,19 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
         try {
             if (args.length() > 0) {
                 JSONObject object = (JSONObject) args.get(0);
+
                 if (!object.has("period") || !object.has("date")) {
                     this.callbackContext.error("Fields period or date is not present or invalid!");
                 }
 
-                String period = (String) object.get("period");
-                String date = (String) object.get("date");
-                prepareParamsToOpenStories(period, date);
+                if (object.has("period") && object.get("period").equals(MORE_ACTION)) {
+                    StoryLineBaseModel baseLineToMoreOption = new StoryLineBaseModel();
+                    triggerStoryAct(baseLineToMoreOption);
+                } else {
+                    String period = (String) object.get("period");
+                    String date = (String) object.get("date");
+                    prepareParamsToOpenStories(period, date);
+                }
             } else {
                 callbackContext.error("Fields to open the stories not present or invalid!");
             }
