@@ -43,6 +43,8 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     private String customerId;
     private MoneyStories moneyStories;
 
+    private static int STORY_SCREEN_CODE_RESULT = 2003;
+
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -223,8 +225,14 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     private void triggerStoryAct(StoryLineBaseModel data) {
         Intent intent = new Intent(this.cordova.getContext(), MoneyStoriesActivity.class);
         intent.putExtra(StoryBarView.INTENT_SELECTED_ITEM, data);
-        this.cordova.getContext().startActivity(intent);
-        callbackContext.success();
+        this.cordova.startActivityForResult(this, intent, STORY_SCREEN_CODE_RESULT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == STORY_SCREEN_CODE_RESULT) {
+            callbackContext.success();
+        }
     }
 
     private StoryBarViewModel initViewModel() {
