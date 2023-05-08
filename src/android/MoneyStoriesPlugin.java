@@ -3,6 +3,7 @@ package com.outsystems.moneystories.plugin;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.lifecycle.Observer;
 
@@ -55,12 +56,15 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
             try {
                 cordova.getThreadPool().execute(() -> {
                     if (ACTION_INIT_SDK.equals(action)) {
+                        Log.v("MoneyStoriesPlugin", " >>> Action initMoneyStoriesSdk");
                         initMoneyStoriesSdk(args);
                     }
                     if (ACTION_OPEN_STORIES.equals(action)) {
+                        Log.v("MoneyStoriesPlugin", " >>> Action openStories");
                         openStoriesScreen(args);
                     }
                     if (ACTION_REFRESH_TOKEN.equals(action)) {
+                        Log.v("MoneyStoriesPlugin", " >>> Action refreshToken");
                         setRefreshToken(args);
                     }
                 });
@@ -92,18 +96,20 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                 moneyStories.setCustomerId(customerId);
 
                 MoneyStories.Companion.initialize(moneyStories);
-
+                Log.v("MoneyStoriesPlugin", " >>> initMoneyStoriesSdk");
                 this.returnInitStories();
             } else {
                 this.callbackContext.error("Error to initialize the SDK arguments not found");
             }
         } catch (Exception ex) {
+            Log.v("MoneyStoriesPlugin", " >>> Exception initMoneyStoriesSdk: "+ ex.getMessage());
             this.callbackContext.error("Error to initialize the SDK: " + ex.getMessage());
         }
     }
 
     private void returnInitStories() {
         StoryBarViewModel viewModel = initViewModel();
+        Log.v("MoneyStoriesPlugin", " >>> ViewModel initialised: "+ viewModel.toString());
         Observer<List<RowViewModel<StoryLineBaseModel>>> result = items -> {
 
             if (items.isEmpty()) {
@@ -124,9 +130,10 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                         }
                     }
                     String resultJson = new Gson().toJson(stories);
-
+                    Log.v("MoneyStoriesPlugin", " >>> Result Stories: "+ resultJson);
                     callbackContext.success(resultJson);
                 } catch (Exception ex) {
+                    Log.v("MoneyStoriesPlugin", " >>> Exception to get Stories: "+ ex.getMessage());
                     callbackContext.error("Error to retrieve the stories");
                 }
             }
@@ -173,7 +180,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
         try {
             if (args != null && args.length() > 0) {
                 String token = (String) args.get(0);
-
+                Log.v("MoneyStoriesPlugin", " >>> setRefreshToken new token: "+ token);
                 if (moneyStories != null) {
                     MoneyStories.Companion.getInstance().setAccessToken("Bearer " + token);
                     moneyStories.setAccessToken("Bearer " + token);
@@ -181,6 +188,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
                 }
             }
         } catch(Exception ex) {
+            Log.v("MoneyStoriesPlugin", " >>> Exception setRefreshToken new token: "+ ex.getMessage());
             this.callbackContext.error("Error to refresh token: "+ex.getMessage());
         }
     }
@@ -223,6 +231,7 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     }
 
     private void triggerStoryAct(StoryLineBaseModel data) {
+        Log.v("MoneyStoriesPlugin", " >>> Story line opened: "+data.toString());
         Intent intent = new Intent(this.cordova.getContext(), MoneyStoriesActivity.class);
         intent.putExtra(StoryBarView.INTENT_SELECTED_ITEM, data);
         this.cordova.startActivityForResult(this, intent, STORY_SCREEN_CODE_RESULT);
@@ -231,11 +240,13 @@ public class MoneyStoriesPlugin extends CordovaPlugin {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == STORY_SCREEN_CODE_RESULT) {
+            Log.v("MoneyStoriesPlugin", " >>> Story line closed");
             callbackContext.success();
         }
     }
 
     private StoryBarViewModel initViewModel() {
+        Log.v("MoneyStoriesPlugin", " >>> AppContainer "+AppContainer.Companion.getInstance());
         return new StoryBarViewModel(AppContainer.Companion.getInstance().getUtilModule().getGson(),
                                      AppContainer.Companion.getInstance().getResourceModule().getUpdateResourcesUseCase(),
                                      AppContainer.Companion.getInstance().getResourceModule().getGetResourcesUseCase(),
